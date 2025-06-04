@@ -1,4 +1,4 @@
-package main
+package app
 
 import (
 	"context"
@@ -7,10 +7,13 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/wallanaq/go-oauth2-token-introspection/internal/config"
 	"github.com/wallanaq/go-oauth2-token-introspection/internal/server"
 )
 
-func main() {
+func Run() error {
+
+	cfg := config.Load()
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -24,11 +27,13 @@ func main() {
 		cancel()
 	}()
 
-	if err := server.Start(ctx); err != nil {
+	if err := server.Start(ctx, cfg); err != nil {
 		slog.Error("server encoutered an error", slog.String("error", err.Error()))
-		os.Exit(1)
+		return err
 	}
 
 	slog.Info("server has shut down gracefully")
+
+	return nil
 
 }
