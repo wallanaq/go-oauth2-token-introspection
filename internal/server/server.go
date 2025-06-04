@@ -2,15 +2,18 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"time"
+
+	"github.com/wallanaq/go-oauth2-token-introspection/internal/config"
 )
 
-func Start(ctx context.Context) error {
+func Start(ctx context.Context, config *config.Config) error {
 
 	srv := &http.Server{
-		Addr: ":8080",
+		Addr: fmt.Sprintf(":%s", config.Server.Port),
 	}
 
 	serverErr := make(chan error, 1)
